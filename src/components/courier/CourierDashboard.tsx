@@ -6,8 +6,20 @@ import { useToast } from '@/components/ui/use-toast';
 import { Package, Navigation, CheckCircle2 } from 'lucide-react';
 import DeliveryCard from '../shared/DeliveryCard';
 
+// Define uma interface para representar o tipo de entrega
+interface Delivery {
+  id: string;
+  productImage: string;
+  storeAddress: string;
+  customerAddress: string;
+  distance: string;
+  estimatedTime: string;
+  status: 'pending' | 'accepted' | 'in_progress' | 'delivered';
+  storeName: string;
+}
+
 // Sample data for deliveries
-const availableDeliveries = [
+const availableDeliveries: Delivery[] = [
   {
     id: '1',
     productImage: 'https://images.unsplash.com/photo-1575218823253-9db705e6a38e?q=80&w=500',
@@ -15,7 +27,7 @@ const availableDeliveries = [
     customerAddress: 'Rua Augusta, 1500, São Paulo',
     distance: '2.1 km',
     estimatedTime: '15 min',
-    status: 'pending' as const,
+    status: 'pending',
     storeName: 'Restaurante Sabor Brasileiro'
   },
   {
@@ -25,12 +37,12 @@ const availableDeliveries = [
     customerAddress: 'Avenida Brigadeiro Faria Lima, 3500, São Paulo',
     distance: '4.3 km',
     estimatedTime: '22 min',
-    status: 'pending' as const,
+    status: 'pending',
     storeName: 'Padaria Bom Pão'
   }
 ];
 
-const myDeliveries = [
+const myDeliveries: Delivery[] = [
   {
     id: '3',
     productImage: 'https://images.unsplash.com/photo-1594179047519-f347310d3322?q=80&w=500',
@@ -38,14 +50,14 @@ const myDeliveries = [
     customerAddress: 'Avenida Rebouças, 3000, São Paulo',
     distance: '3.7 km',
     estimatedTime: '18 min',
-    status: 'accepted' as const,
+    status: 'accepted',
     storeName: 'Farmácia Saúde'
   }
 ];
 
 const CourierDashboard = () => {
-  const [activeDeliveries, setActiveDeliveries] = useState(availableDeliveries);
-  const [myActiveDeliveries, setMyActiveDeliveries] = useState(myDeliveries);
+  const [activeDeliveries, setActiveDeliveries] = useState<Delivery[]>(availableDeliveries);
+  const [myActiveDeliveries, setMyActiveDeliveries] = useState<Delivery[]>(myDeliveries);
   const [activeTab, setActiveTab] = useState('available');
   const { toast } = useToast();
   
@@ -55,7 +67,7 @@ const CourierDashboard = () => {
     if (!delivery) return;
     
     // Update status and move to my deliveries
-    const updatedDelivery = { ...delivery, status: 'accepted' as const };
+    const updatedDelivery: Delivery = { ...delivery, status: 'accepted' };
     
     // Remove from available deliveries
     setActiveDeliveries(activeDeliveries.filter(d => d.id !== id));
@@ -76,7 +88,7 @@ const CourierDashboard = () => {
   const handleStartDelivery = (id: string) => {
     // Update status to in_progress
     const updatedDeliveries = myActiveDeliveries.map(delivery => 
-      delivery.id === id ? { ...delivery, status: 'in_progress' as const } : delivery
+      delivery.id === id ? { ...delivery, status: 'in_progress' } : delivery
     );
     
     setMyActiveDeliveries(updatedDeliveries);
@@ -90,7 +102,7 @@ const CourierDashboard = () => {
   const handleCompleteDelivery = (id: string) => {
     // Update status to delivered
     const updatedDeliveries = myActiveDeliveries.map(delivery => 
-      delivery.id === id ? { ...delivery, status: 'delivered' as const } : delivery
+      delivery.id === id ? { ...delivery, status: 'delivered' } : delivery
     );
     
     setMyActiveDeliveries(updatedDeliveries);
